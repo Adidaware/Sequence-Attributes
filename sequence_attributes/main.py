@@ -1,6 +1,6 @@
 """
-This is the main module of the assignment that imports functions from other modules
-This module receives the command line arguments, read the cdds attributes, read the ensemble gene data
+Command-line entry point: reads CCDS sequences, CCDS attributes and Ensembl gene data,
+computes per-sequence attributes and writes the ranked results.
 """
 import sys
 import argparse
@@ -45,7 +45,7 @@ def main():
                                                            dna_sequence=dna_sequence,
                                                            genetic_code=return_standard_genetic_code(),
                                                            attribute_df=merged_df))
-        if i == sys.maxsize:  # Set this to sys.maxsize before final submission
+        if i == sys.maxsize:  # lower this to process only the first N sequences while debugging
             break
 
     # Convert list of tuples to pandas dataframe

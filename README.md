@@ -1,84 +1,73 @@
 # Sequence Attributes
 
-## Author's Name: Aditya Daware
+A Python package that annotates human coding sequences. It reads CCDS sequences, translates them to protein, computes sequence-composition attributes, joins in gene annotations from CCDS and Ensembl, and ranks genes by proline content.
 
-File name: main.py
+![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white) ![pandas](https://img.shields.io/badge/pandas-150458?logo=pandas&logoColor=white) ![pytest](https://img.shields.io/badge/tested%20with-pytest-0A9EDC?logo=pytest&logoColor=white)
 
-Modules used:
-sys
-argparse
-pandas
-sequence_attributes.sequence_formats.fasta_format
-sequence_attributes.utils.seq_attribute_utils  
+## ✨ What it computes
 
+For every CCDS sequence:
 
-Code function: This is the main module of the assignment that imports functions from other modules
-This module receives the command line arguments, read the cdds attributes, read the ensemble gene data
+* **DNA:** length, nucleotide composition, GC content, 3-mer counts
+* **Protein:** translation with the standard genetic code, length, amino-acid composition, **proline content**
+* **Annotation:** CCDS ID, chromosome, RefSeq gene ID, Ensembl gene ID, canonical transcript, biotype and description
 
-File name: io_utils.py
-File description: This code is provided in the assignment.
+The results are sorted by proline content, highest first, with ties broken by shortest protein.
 
-Modules used:
-sys
+## 🚀 Usage
 
-Code function: This module utilizes the context management protocol (implementing __enter__ and __exit__ methods) and presents a robust approach for managing file operations within a large project
+```bash
+git clone https://github.com/Adidaware/Sequence-Attributes.git
+cd Sequence-Attributes
+pip install -r requirements.txt
 
+python -m sequence_attributes.main \
+    --infile_ccds_fasta       CCDS_nucleotide.fna \
+    --infile_ccds_attributes  CCDS.current.txt \
+    --infile_ensembl_gene     ensembl_genes.tsv \
+    --excel_outfile           sequence_attributes.xlsx
+```
 
-File name: seq_attribute_utils.py
+| Input | Description |
+| :--- | :--- |
+| `--infile_ccds_fasta` | CCDS nucleotide FASTA, with headers like `CCDS1.1\|Hs109\|chr1` |
+| `--infile_ccds_attributes` | Tab-separated CCDS attribute table |
+| `--infile_ensembl_gene` | Tab-separated Ensembl gene table (ID, gene, canonical transcript, biotype, description) |
 
-File description:
+**Outputs**
 
-Modules imported: 
-typing
-collections
-pandas
+* `sequence_attributes.xlsx`: every sequence and its computed attributes.
+* `sequence_attributes_proline_composition.tsv`: the 10 genes with the highest and the 10 with the lowest proline content (also printed to the console).
 
-Code function: This code is designed to contain all the functions required to read and process cdds data, ensemble gene data and generate the header list, sequence list. All the functions are imported in the main.py module
+## ✅ Tests
 
+```bash
+python -m pytest
+```
 
-File name: fasta_format.py
+The tests cover the FASTA reader, the file-handling context manager and the sequence-attribute functions.
 
-File description:
+## 📁 Package Layout
 
-Modules imported: 
-typing
-sequence_atrributes.utils.io_utils
+```
+sequence_attributes/
+├── main.py                       # CLI entry point
+├── sequence_formats/
+│   └── fasta_format.py           # FASTA reader and validation
+├── utils/
+│   ├── io_utils.py               # FileHandler context manager
+│   └── seq_attribute_utils.py    # composition, translation, k-mers, lookups
+└── tests/unit/                   # pytest suites
+```
 
-Code function: This module contains the functions generate a list of headers and sequences
+## 📝 Notes
 
+* Melting temperature (`tm`) is a placeholder and is always reported as `0.0`.
 
-File name: test_fasta_format.py
+## 🙏 Credits
 
+`utils/io_utils.py` is based on provided starter code.
 
-File description:
+## 👤 Author
 
-Modules imported: 
-pytest
-sequence_attributes.sequence_formats.fasta_format
-
-Code function: This python program is designed to test the functions defined in the fasta_format.py module
-
-
-File name: test_io_utils.py
-
-File description:
-
-Modules imported: 
-pytest
-sequence_attributes.utils.io_utils
-
-Code function: This python program is designed to test the functions in io_utils.py
-
-
-File name: test_seq_attribute_utils.py
-
-File description:
-
-Modules imported: 
-pytest
-pandas
-sequence_attributes.utils.seq_attribute_utils.py
-
-
-Code function: This python program is designed to test the functions defined in seq_attribute_utils.py
-
+**Aditya Daware** · [LinkedIn](https://www.linkedin.com/in/aditya-daware) · [GitHub](https://github.com/Adidaware)
